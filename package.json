@@ -1,0 +1,23 @@
+{
+  "name": "td1",
+  "version": "0.0.1",
+  "description": "",
+  "homepage": "https://github.com/Horos34/ynov-docker-td1#readme",
+  "bugs": {
+    "url": "https://github.com/Horos34/ynov-docker-td1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Horos34/ynov-docker-td1.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "mocha": "^11.7.4"
+  }
+}

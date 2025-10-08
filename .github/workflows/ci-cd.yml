@@ -1,4 +1,4 @@
-name: CI/CD Pipeline (Node.js 22 + Yarn)
+name: CI/CD Pipeline (Node.js 22 + npm + Mocha)
 
 on:
   push:
@@ -11,29 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Étape 1 : Récupération du code
+      # Étape 1 : Récupérer le code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Étape 2 : Configuration de Node.js 22
+      # Étape 2 : Configurer Node.js 22
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: 'yarn'
+          cache: "npm"
 
-      # Étape 3 : Installation des dépendances avec Yarn
+      # Étape 3 : Installer les dépendances
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
-      # Étape 4 : Exécution des tests (si tu en as)
+      # Étape 4 : Exécuter les tests Mocha
       - name: Run tests
         run: |
-          if [ -f package.json ] && grep -q "\"test\":" package.json; then
-            yarn test
-          else
-            echo "⚠️ Aucun test défini, étape ignorée."
-          fi
+          echo "🚀 Lancement des tests avec Mocha..."
+          npm test
 
       # Étape 5 : Connexion à Docker Hub
       - name: Login to Docker Hub
@@ -47,7 +44,13 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/node-app:latest .
 
-      # Étape 7 : Push de l'image vers Docker Hub (uniquement sur master)
+      # Étape 7 : Tests dans le conteneur Docker
+      - name: Run tests inside Docker container
+        run: |
+          echo "🧪 Tests dans le conteneur Docker..."
+          docker run --rm ${{ secrets.DOCKERHUB_USERNAME }}/node-app:latest npm test
+
+      # Étape 8 : Push de l'image vers Docker Hub (uniquement sur master)
       - name: Push Docker image
         if: github.ref == 'refs/heads/master'
         run: |
